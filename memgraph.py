@@ -19,7 +19,7 @@ def create_or_update_node(address):
 
 
 # Function to insert transaction and create relationships
-def insert_transaction(
+def memgraph_insert_transaction(
     from_address,
     to_address,
     value,
@@ -43,6 +43,14 @@ def insert_transaction(
     CREATE (from)-[:SENT]->(tx:Transaction {{value: {value}, timestamp: '{timestamp}', transactionIndex: '{transaction_index}', transactionHash: '{transaction_hash}', blockHash: '{block_hash}', blockNumber: '{block_number}', gas: '{gas}', gasPrice: '{gas_price}', nonce: '{nonce}'}})-[:TO]->(to)
     """
     )
+
+
+def memgraph_execute_query(query):
+    query_results = memgraph.execute_and_fetch(query)
+    results = []
+    for row in query_results:
+        results.append(row)
+    return results
 
 
 # Sample transaction data
