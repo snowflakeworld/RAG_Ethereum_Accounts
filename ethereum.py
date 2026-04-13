@@ -1,7 +1,7 @@
 import requests
 import datetime
 from tqdm import tqdm
-from memgraph import insert_transaction
+from memgraph import memgraph_insert_transaction
 
 API_KEY = "3U9QXKB7SQ3UDBRYJM7244FD3RH9QYMR5J"
 
@@ -108,7 +108,7 @@ for block_num in tqdm(range(start_block, end_block)):
 
     idx = 0
     for transaction in transactions:
-        insert_transaction(
+        memgraph_insert_transaction(
             transaction["fromAddress"],
             transaction["toAddress"],
             transaction["value"],
