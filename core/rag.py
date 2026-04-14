@@ -1,7 +1,7 @@
 from openai import OpenAI
 
-from app.core.vectordb import search_records
-from app.core.memgraph import memgraph_execute_query
+from core.vectordb import search_records
+from core.memgraph import memgraph_execute_query
 
 
 class RAG:
@@ -62,7 +62,7 @@ class RAG:
                     "content": """You are a helpful assistant.\nYou should output a plain user-friendly English sentences to represent ethereum accounts and transactions.\n
                     The input text consists of inputted user prompt and the result of the memgraph Cypher query according to the user prompt.\n
                     In the result of the memgraph Cypher query, there might be fields like one of these\n
-                    'totalTransactionCount'(number of transactions), 'totalTransactionAmount'(sum of amount of transactions in Ether), 'accountBalance'(balance of the Ethereum account in Ether),\t
+                    'accountCount'(number of accounts), 'totalTransactionCount'(number of transactions), 'totalTransactionAmount'(sum of amount of transactions in Ether), 'accountBalance'(balance of the Ethereum account in Ether),\t
                     'totalSentAmount'(sum of transferred amounts in Ether), 'transactionCount'(number of transactions), 'totalReceivedAmount'(sum of received amounts in Ether),\t
                     'transactionAmount'(sum of amount of transactions in Ether), 'transactionType'(whether transaction type 'Sent' or 'Received'),\t
                     'transactionHash'(hash value of Ethereum transaction), 'value'(amount of Ethereum transaction in Ether), 'timestamp'(block timestamp of a transaction),\t

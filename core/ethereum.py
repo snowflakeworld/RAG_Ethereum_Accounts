@@ -3,10 +3,11 @@ from dotenv import load_dotenv
 import requests
 import datetime
 from tqdm import tqdm
-from app.core.memgraph import memgraph_insert_transaction
+from core.memgraph import memgraph_insert_transaction
 
 load_dotenv()
 API_KEY = os.getenv("ETHERSCAN_API_KEY")
+# API_KEY = "39YEBXVC75RNYYTKQUTP292QV2U2YX386S"
 
 
 # Get Ethereum Block number by timestamp

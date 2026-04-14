@@ -6,6 +6,8 @@ import json
 load_dotenv()
 API_KEY = os.getenv("PINECONE_API_KEY")
 
+# API_KEY = "pcsk_718FQp_J3iprBXXEFRNzGiSMLuB9JNMji6VUDDDhmTh9zw7Ak3JyeF8XP3BNTh5VJek9Z"
+
 # Define the name and dimension of your vector index
 index_name = "my-ethereum-index"
 dimension = 512  # Replace with the dimension size of your embeddings
