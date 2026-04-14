@@ -1,6 +1,7 @@
 import os
 from dotenv import load_dotenv
 from fastapi import FastAPI
+from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
 
 from core.rag import RAG
@@ -8,12 +9,23 @@ from core.rag import RAG
 load_dotenv()
 app = FastAPI()
 
+origins = ["*"]
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=origins,
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
+
 
 class UserPrompt(BaseModel):
     prompt: str
 
 
-rag_instance = None
+api_key = os.getenv("OPENAI_API_KEY")
+rag_instance = RAG(api_key)
 
 
 @app.get("/")
@@ -21,20 +33,8 @@ def read_root():
     return {"Hello": "Word"}
 
 
-@app.get("/initialize")
-async def initialize_rag():
-    api_key = os.getenv("OPENAI_API_KEY")
-    global rag_instance
-    rag_instance = RAG(api_key)
-
-    return {"status": "success"}
-
-
 @app.post("/generate")
 async def generate_result(input: UserPrompt):
-    if rag_instance == None:
-        return {"status": "failure", "message": "RAG instance is not initialized."}
-
     result = rag_instance.generate(input.prompt)
 
     if result == None:

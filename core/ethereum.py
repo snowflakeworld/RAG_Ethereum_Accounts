@@ -3,11 +3,11 @@ from dotenv import load_dotenv
 import requests
 import datetime
 from tqdm import tqdm
-from core.memgraph import memgraph_insert_transaction
+from memgraph import memgraph_insert_transaction
 
-load_dotenv()
-API_KEY = os.getenv("ETHERSCAN_API_KEY")
-# API_KEY = "39YEBXVC75RNYYTKQUTP292QV2U2YX386S"
+# load_dotenv()
+# API_KEY = os.getenv("ETHERSCAN_API_KEY")
+API_KEY = "39YEBXVC75RNYYTKQUTP292QV2U2YX386S"
 
 
 # Get Ethereum Block number by timestamp
@@ -88,8 +88,8 @@ def extract_transactions(block):
 
 
 # Get start and end block number
-ts_2025 = int(datetime.datetime(2025, 1, 1).timestamp())
-ts_2026 = int(datetime.datetime(2026, 4, 11).timestamp())
+ts_2025 = int(datetime.datetime(2026, 1, 1).timestamp())
+ts_2026 = int(datetime.datetime(2026, 4, 13).timestamp())
 
 start_block = int(get_block_by_timestamp(ts_2025)["result"])
 print("Start block:", start_block)
