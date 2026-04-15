@@ -3,11 +3,11 @@ from dotenv import load_dotenv
 import requests
 import datetime
 from tqdm import tqdm
-from memgraph import memgraph_insert_transaction
+from core.memgraph import memgraph_insert_transaction
 
-# load_dotenv()
-# API_KEY = os.getenv("ETHERSCAN_API_KEY")
-API_KEY = "39YEBXVC75RNYYTKQUTP292QV2U2YX386S"
+load_dotenv()
+API_KEY = os.getenv("ETHERSCAN_API_KEY")
+# API_KEY = "39YEBXVC75RNYYTKQUTP292QV2U2YX386S"
 
 
 # Get Ethereum Block number by timestamp
@@ -38,21 +38,43 @@ def get_block(block_number):
     return requests.get(url, params=params).json()
 
 
+def process_specific_block(block_num):
+    block = get_block(block_num)
+
+    if "result" not in block:
+        return
+
+    transactions = extract_transactions(block)
+
+    print(block_num, len(transactions))
+
+    idx = 0
+    for transaction in transactions:
+        memgraph_insert_transaction(
+            transaction["fromAddress"],
+            transaction["toAddress"],
+            transaction["value"],
+            transaction["timestamp"],
+            transaction["transactionIndex"],
+            transaction["transactionHash"],
+            transaction["blockHash"],
+            transaction["blockNumber"],
+            transaction["gas"],
+            transaction["gasPrice"],
+            transaction["nonce"],
+        )
+        # insert_data(transaction[0], transaction[1], transaction[2], transaction[3])
+        idx = idx + 1
+        print(transaction)
+
+
 # Get Ethereum transaction history (fromAddress, toAddress, value, timestamp) from block data
 def extract_transactions(block):
     transactions = []
 
     for tx in block["result"]["transactions"]:
-        # print(tx)
-        # print(
-        #     tx["from"],
-        #     tx["to"],
-        #     float(int(tx["value"], 16) / 1e18),
-        #     int(tx["blockTimestamp"], 16),
-        # )
-
         type = int(tx["type"], 16)
-        if type != 2:
+        if type != 2:  # If not transfer type then continue
             continue
 
         from_address = tx["from"]
@@ -87,44 +109,21 @@ def extract_transactions(block):
     return transactions
 
 
-# Get start and end block number
-ts_2025 = int(datetime.datetime(2026, 1, 1).timestamp())
-ts_2026 = int(datetime.datetime(2026, 4, 13).timestamp())
+# Process collection task
+def process_collection_task():
+    # Get start and end block number
+    ts_2025 = int(datetime.datetime(2026, 1, 1).timestamp())
+    ts_2026 = int(datetime.datetime(2026, 4, 13).timestamp())
 
-start_block = int(get_block_by_timestamp(ts_2025)["result"])
-print("Start block:", start_block)
-end_block = int(get_block_by_timestamp(ts_2026)["result"])
-print("End block:", end_block)
+    start_block = int(get_block_by_timestamp(ts_2025)["result"])
+    print("Start block:", start_block)
+    end_block = int(get_block_by_timestamp(ts_2026)["result"])
+    print("End block:", end_block)
 
-# end_block = start_block + 10
+    start_block = 24137648
+    # end_block = start_block + 10
 
-# Get transaction history from range(start_block, end_block)
-# Insert transaction data into memgraph
-for block_num in tqdm(range(start_block, end_block)):
-    block = get_block(block_num)
-
-    if "result" not in block:
-        continue
-
-    transactions = extract_transactions(block)
-
-    print(block_num, len(transactions))
-
-    idx = 0
-    for transaction in transactions:
-        memgraph_insert_transaction(
-            transaction["fromAddress"],
-            transaction["toAddress"],
-            transaction["value"],
-            transaction["timestamp"],
-            transaction["transactionIndex"],
-            transaction["transactionHash"],
-            transaction["blockHash"],
-            transaction["blockNumber"],
-            transaction["gas"],
-            transaction["gasPrice"],
-            transaction["nonce"],
-        )
-        # insert_data(transaction[0], transaction[1], transaction[2], transaction[3])
-        idx = idx + 1
-        print(transaction)
+    # Get transaction history from range(start_block, end_block)
+    # Insert transaction data into memgraph
+    for block_num in tqdm(range(start_block, end_block)):
+        process_specific_block(block_num)
