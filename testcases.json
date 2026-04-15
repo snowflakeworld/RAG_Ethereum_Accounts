@@ -135,6 +135,16 @@
     "type": "GetLastNTransactionHistory"
   },
   {
+    "text": "Show the latest transaction.",
+    "cypher": "MATCH (a:Account)-[:SENT]->(tx:Transaction)-[:TO]->(b:Account)\nRETURN DISTINCT a.address AS fromAddress, b.address AS toAddress, tx.value AS value, tx.timestamp AS timestamp, tx.gas AS gas, tx.blockNumber AS blockNumber, tx.transactionHash AS transactionHash, tx.transactionIndex AS transactionIndex\nORDER BY tx.timestamp DESC\nLIMIT 1",
+    "type": "GetLatestTransactionHistory"
+  },
+  {
+    "text": "What is the last transaction?",
+    "cypher": "MATCH (a:Account)-[:SENT]->(tx:Transaction)-[:TO]->(b:Account)\nRETURN DISTINCT a.address AS fromAddress, b.address AS toAddress, tx.value AS value, tx.timestamp AS timestamp, tx.gas AS gas, tx.blockNumber AS blockNumber, tx.transactionHash AS transactionHash, tx.transactionIndex AS transactionIndex\nORDER BY tx.timestamp DESC\nLIMIT 1",
+    "type": "GetLatestTransactionHistory"
+  },
+  {
     "text": "Which block is the transaction 0xTransactionHash in?",
     "cypher": "MATCH (tx:Transaction {transactionHash: '0xTransactionHash'})\nRETURN DISTINCT tx.blockNumber AS blockNumber, tx.transactionIndex as transactionIndex\nLIMIT 1",
     "type": "GetTransactionBlockNumber"
