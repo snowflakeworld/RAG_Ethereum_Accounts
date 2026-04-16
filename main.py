@@ -40,10 +40,10 @@ scheduler = BackgroundScheduler()
 # Function to be called by the cron job
 def my_cron_job():
     print("Cron job executed at", time.strftime("%Y-%m-%d %H:%M:%S"))
-    last_block_number = int(str(get_variable("blockNumber"))) + 1
-    process_specific_block(last_block_number + 1)
-    update_variable("blockNumber", last_block_number + 1)
-    print(f"Block number: {last_block_number + 1} processed")
+    # last_block_number = int(str(get_variable("blockNumber"))) + 1
+    # process_specific_block(last_block_number + 1)
+    # update_variable("blockNumber", last_block_number + 1)
+    # print(f"Block number: {last_block_number + 1} processed")
 
 
 # Start the scheduler and add the cron job
