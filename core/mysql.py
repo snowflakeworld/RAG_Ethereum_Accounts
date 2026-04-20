@@ -21,10 +21,10 @@ class Variables(Base):
 
 
 def get_variable(key):
-    # row = session.query(Variables).filter(Variables.key == key).first()
+    row = session.query(Variables).filter(Variables.key == key).first()
 
-    # return row.value
-    return latestBlockNumber
+    return row.value
+    # return latestBlockNumber
 
 
 def update_variable(key, value):
